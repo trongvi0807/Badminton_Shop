@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ProductCard from "./ProductCard.jsx";
 
@@ -61,9 +62,11 @@ function FeaturedProducts() {
       
       {/* Nút Xem Tất Cả */}
       <div className="text-center mt-10">
+        <Link to="/products">
         <button className="border-2 border-green-500 text-green-600 hover:bg-green-500 hover:text-white px-8 py-3 rounded-full font-bold transition duration-300">
           Xem Tất Cả Sản Phẩm
         </button>
+        </Link>
       </div>
     </section>
   );

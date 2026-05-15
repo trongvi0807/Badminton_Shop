@@ -17,7 +17,7 @@ function Banner() {
       setCurrentIndex((prevIndex) =>
         prevIndex === banners.length - 1 ? 0 : prevIndex + 1
       );
-    }, 4000);
+    }, 5000);
 
     return () => clearInterval(timer);
   }, []);
