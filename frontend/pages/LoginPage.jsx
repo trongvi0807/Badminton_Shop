@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { data, Link, useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -14,11 +14,33 @@ function LoginPage(){
     const handleChange = (e)=>{
         setFormData({...formData, [e.target.name]: e.target.value});
     };
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Compare data post on Django:", formData);
-        alert("Successful login simulation");
-        navigate("/");
+        const BASEURL = import.meta.env.VITE_DJANGO_BASE_URL ;
+        try{
+          const response = await fetch(`${BASEURL}/api/login/`,{
+            method:"POST",
+            headers:{
+              "Content-Type": "application/json",
+            },
+            body :  JSON.stringify(formData),
+          });
+          const contentType = response.headers.get("content-type");
+            if (contentType && contentType.indexOf("application/json") !== -1) {
+          const data = await response.json();
+              if (response.ok) {
+                localStorage.setItem("userInfo", JSON.stringify(data.user));
+                alert("Đăng nhập thành công!");
+                navigate("/");
+              } else {
+                setError(data.error || "Login failed");
+              }
+} else {
+  // This handles the 500 error HTML response
+  setError("Server error: The backend returned an invalid response.");
+}
+        }
+        catch{}
       };
 
 return (
@@ -50,7 +72,7 @@ return (
                   required
                   className="appearance-none relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-400 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 sm:text-sm transition duration-200"
                   placeholder="Nhập tên đăng nhập"
-                  value={formData.username}
+                  value={formData.tendangnhap}
                   onChange={handleChange}
                 />
               </div>
@@ -64,7 +86,7 @@ return (
                   required
                   className="appearance-none relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-400 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 sm:text-sm transition duration-200"
                   placeholder="••••••••"
-                  value={formData.password}
+                  value={formData.matkhau}
                   onChange={handleChange}
                 />
               </div>
