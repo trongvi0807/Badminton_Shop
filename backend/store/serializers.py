@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Sanpham,Loaisanpham
+from .models import Sanpham,Loaisanpham,Taikhoan
 
 class LoaisanphamSerializer(serializers.ModelSerializer):
     class Meta:
@@ -12,4 +12,3 @@ class SanphamSerializer(serializers.ModelSerializer):
         model = Sanpham
         fields = '__all__'
 
- 

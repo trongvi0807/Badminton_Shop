@@ -1,23 +1,30 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 function Header() {
   const navigate = useNavigate();
 
-  // GIẢ LẬP TRẠNG THÁI ĐĂNG NHẬP (Sau này sẽ lấy từ localStorage hoặc Context API)
-  // Bạn có thể đổi true thành false để xem giao diện lúc chưa đăng nhập nhé!
   const [isLoggedIn, setIsLoggedIn] = useState(false); 
   
-  // Thông tin user giả lập
-  const [user, setUser] = useState({
-    name: "Trong Vi",
-    avatar: "http://127.0.0.1:8000/media/products/HUIT.jpg", 
-  });
+  const [user, setUser] = useState(null);
+  useEffect(()=>{
+    const storedUser = localStorage.getItem("userInfo");
+    const BASEURL = import.meta.env.VITE_DJANGO_BASE_URL;
+    if(storedUser){
+      const parsedUser = JSON.parse(storedUser);
+      setIsLoggedIn(true);
+      setUser({
+        name:parsedUser.tendangnhap,
+        avatar: `${BASEURL}/media/products/HUIT.jpg`,
+      })
+    }
+  },[]);
 
   // Hàm xử lý Đăng xuất
   const handleLogout = () => {
-    // Xóa thông tin (sau này sẽ làm) và chuyển trạng thái
+    localStorage.removeItem("userInfo");
     setIsLoggedIn(false);
+    setUser(null);
     navigate("/"); // Trở về trang chủ
   };
 
@@ -28,9 +35,12 @@ function Header() {
         {/* 1. LOGO */}
         <div className="flex-shrink-0">
           <Link to="/">
-            <img src="/logo.png" alt="Logo" className="h-12 object-contain" 
-                 onError={(e) => e.target.src = "https://via.placeholder.com/150x50?text=LOGO"}/>
-          </Link>
+          
+            <img src={`${import.meta.env.VITE_DJANGO_BASE_URL || "http://127.0.0.1:8000"}/media/products/HUIT.jpg`} 
+              alt="Logo" 
+              className="h-12 object-contain rounded-md"
+              onError={(e) => e.target.src = "https://placehold.co/150x50?text=LOGO"}/>
+            </Link>
         </div>
 
         {/* 2. THANH TÌM KIẾM */}
